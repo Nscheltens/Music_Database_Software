@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "mounting external hard drive"
+sudo umount /dev/sda1
+sudo mount /dev/sda1 /mnt/point1/

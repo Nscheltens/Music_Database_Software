@@ -1,0 +1,29 @@
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix root:  <http://somewhere/Music#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+root:TomsFirst  a  root:Album .
+
+root:AppearsOn  a    owl:ObjectProperty ;
+        rdfs:domain  root:Song ;
+        rdfs:range   root:Album .
+
+root:Song  a    owl:Class .
+
+root:TimP  a       root:Artist ;
+        root:Name  "TimP" .
+
+root:Sings  a        owl:ObjectProperty ;
+        rdfs:domain  root:Artist ;
+        rdfs:range   root:Song .
+
+root:TomO  a           root:Artist ;
+        root:Released  root:TomsFirst .
+
+root:Album  a   owl:Class .
+
+root:Released  a     owl:ObjectProperty ;
+        rdfs:domain  root:Artist ;
+        rdfs:range   root:Album .
+
+root:Artist  a  owl:Class .
