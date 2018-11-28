@@ -31,14 +31,8 @@ public class Database_Control {
     
     private Model model = setModel();
     private final String root = "http://somewhere/Music#";
-    private Resource Artist = model.getResource(root + "Artist"),
-            Album = model.getResource(root + "Album"),
-            Song = model.getResource(root + "Song"),
-            Released, Sings, Appears_on, Name;
-    private final Property ReleasedP = model.createProperty(root + "Released"),
-            SingsP = model.createProperty(root + "Sings"),
-            Appears_onP = model.createProperty(root + "AppearsOn"),
-            NameP = model.createProperty(root + "Name");
+    private Resource Artist, Album, Song, Released, Sings, Appears_on, Name;
+    private final Property ReleasedP, SingsP, Appears_onP, NameP;
     
     public Database_Control(){
         
@@ -47,6 +41,10 @@ public class Database_Control {
         Artist = model.getResource(root + "Artist");
         Album = model.getResource(root + "Album");
         Song = model.getResource(root + "Song");
+        ReleasedP = model.createProperty(root + "Released");
+        SingsP = model.createProperty(root + "Sings");
+        Appears_onP = model.createProperty(root + "AppearsOn");
+        NameP = model.createProperty(root + "Name");
         
         // Create a new query
         String quaryName = "TimP";
@@ -97,6 +95,7 @@ public class Database_Control {
         } catch (Exception ex){
             System.err.println(ex.toString());
         }
+        System.out.println("model set successful!");
         return model;
     }
     /**
@@ -270,6 +269,7 @@ public class Database_Control {
      * @return 
      */
     public String getArtist(String artistName){
+        //add error handeling
         String queryString = "PREFIX root: <http://somewhere/Music#> "
                 + "select ?o where { "
                 + "root:"+artistName+" a root:Artist . "

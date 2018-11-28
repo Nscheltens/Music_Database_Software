@@ -21,3 +21,6 @@ root:Released  a     owl:ObjectProperty ;
         rdfs:range   root:Album .
 
 root:Artist  a  owl:Class .
+
+root:TimP	a	root:Artist;
+		root:Name	"TimP"

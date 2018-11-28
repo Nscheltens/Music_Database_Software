@@ -52,27 +52,74 @@ public class Music_Database_Control{
         return 1;
     }
     private int displayHelp(){
+        //OUT.println();
+        OUT.println("/***************************************************************************************************/");
+        OUT.println("Usage for Music Database");
+        OUT.println("   scan [Artist/Album/Song] [FileLocation]        Scan file/folder to add to music database.");
+        OUT.println();
+        OUT.println("   [SPAQL Quary]                                  Executes SPARQ Quary on database and displays result.");
+        OUT.println();
+        OUT.println("   find [Artist/Album/Song] [Name]                Searches database and returns true or false if Name\n"
+                  + "                                                  is in the database.");
+        OUT.println();
+        OUT.println("   refresh                                        preforms automatic update on database from default\n"
+                  + "                                                  directory.");
+        OUT.println();
+        OUT.println("   exit                                           stops database.");
+        OUT.println("/***************************************************************************************************/");
         return 0;
     }
     private int runQuary(String Quary){
         return 0;
     }
-    private int scanFile(String[] fileLocation){
+    private int findQuary(String[] params){
+        OUT.println(params.length);
+        if(params.length < 3) return -1;
+        String name = params[2];
+        if(params.length > 3){
+            for(int i = 3; i < params.length; i++){
+                name = name +" "+params[i];
+            }
+        }
+        OUT.println("this is the name "+name);
+        boolean stat;
+        switch(params[1]){
+            default: return -1;
+            case "Artist": stat = database.checkArtist(name);
+                OUT.println(stat);
+                return 0;
+            case "Album": stat = database.checkAlbum(name);
+                OUT.println(stat);
+                return 0;
+            case "Song": stat = database.checkSong(name);
+                OUT.println(stat);
+                return 0;
+        }
+    }
+    private int scanFile(String[] Params){
+        //build Data_Scanner class
+        return 0;
+    }
+    private int updateDatabase(){
         return 0;
     }
     private int Parse_Eval(String statment){
         int ReturnInt;
-        String[] tokens = statment.split(" \t");
+        String[] tokens = statment.split(" ");
         switch(tokens[0]){
             default: ReturnInt = -1;
                 return ReturnInt;
-            case "exit": ReturnInt = exitProgram();
-                return ReturnInt;
             case "help": ReturnInt = displayHelp();
+                return ReturnInt;
+            case "scan": ReturnInt = scanFile(tokens);
                 return ReturnInt;
             case "select": ReturnInt = runQuary(statment);
                 return ReturnInt;
-            case "scan": ReturnInt = scanFile(tokens);
+            case "find": ReturnInt = findQuary(tokens);
+                return ReturnInt;
+            case "refresh": ReturnInt = updateDatabase();
+                return ReturnInt;
+            case "exit": ReturnInt = exitProgram();
                 return ReturnInt;
         }
     }
@@ -83,7 +130,7 @@ public class Music_Database_Control{
         OUT.print(">");
         while(in.hasNext()){
             String input = in.nextLine();
-            OUT.println(input);
+            //OUT.println(input);
             int des = Parse_Eval(input);
             if(des == 1) return;
             else if(des == -1) OUT.println("Incorrect usage type help to see commands");
@@ -114,5 +161,4 @@ public class Music_Database_Control{
             scheduler.shutdown();
         }
     }
-    
 }
