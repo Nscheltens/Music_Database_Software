@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.database_control;
+package com.mycompany.music_databases_control;
 
 import java.io.*;
 import java.util.Iterator;
@@ -24,28 +24,29 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 /**
- *
  * @author Nicolaas Scheltens
  */
 
 public class Database_Control {
     
-    private static Model model = setModel();
-    private static final String root = "http://somewhere/Music#";
-    private static Resource Artist, Album, Song, Released, Sings, Appears_on, Name;
-    private static Property ReleasedP, SingsP, Appears_onP, NameP;
+    private Model model = setModel();
+    private final String root = "http://somewhere/Music#";
+    private Resource Artist = model.getResource(root + "Artist"),
+            Album = model.getResource(root + "Album"),
+            Song = model.getResource(root + "Song"),
+            Released, Sings, Appears_on, Name;
+    private final Property ReleasedP = model.createProperty(root + "Released"),
+            SingsP = model.createProperty(root + "Sings"),
+            Appears_onP = model.createProperty(root + "AppearsOn"),
+            NameP = model.createProperty(root + "Name");
     
-    public static void main(String[] args){
+    public Database_Control(){
         
         System.out.println("Hello World!");
         
         Artist = model.getResource(root + "Artist");
         Album = model.getResource(root + "Album");
         Song = model.getResource(root + "Song");
-        ReleasedP = model.createProperty(root + "Released");
-        SingsP = model.createProperty(root + "Sings");
-        Appears_onP = model.createProperty(root + "AppearsOn");
-        NameP = model.createProperty(root + "Name");
         
         // Create a new query
         String quaryName = "TimP";
@@ -59,7 +60,7 @@ public class Database_Control {
         ResultSet results = qe.execSelect();
  
         // Output query results 
-        System.out.println(checkArtist(quaryName));
+        //System.out.println(checkArtist(quaryName));
         ResultSetFormatter.out(System.out, results, query);
  
         // Important - free up resources used running the query
@@ -69,7 +70,7 @@ public class Database_Control {
      * 
      * @return 
      */
-    public static Model setModel(){
+    public Model setModel(){
         InputStream in = null;
         Model model = null;
         try {
@@ -103,7 +104,7 @@ public class Database_Control {
      * @param model
      * @return 
      */
-    public static boolean createDatabase(Model model){
+    public boolean createDatabase(Model model){
         System.out.println("Creating database in turtle format!");
         File file = new File("Database.ttl");
         FileWriter writer = null;
@@ -142,7 +143,7 @@ public class Database_Control {
         }
         return true;
     }
-    public static boolean writeModel(){
+    public boolean writeModel(){
         File file = new File("Database.ttl");
         FileWriter writer = null;
         try {
@@ -159,7 +160,7 @@ public class Database_Control {
         }
         return true;
     }
-    public static boolean writeJSON(String location, String writeString){
+    public boolean writeJSON(String location, String writeString){
         
         return false;
     }
@@ -169,7 +170,7 @@ public class Database_Control {
      * @param songName
      * @return 
      */
-    public static boolean checkSong(String songName){
+    public boolean checkSong(String songName){
         String modelQuery = getSong(songName);
         return songName.equals(modelQuery);
     }
@@ -178,7 +179,7 @@ public class Database_Control {
      * @param artistName
      * @return 
      */
-    public static boolean checkArtist(String artistName){
+    public boolean checkArtist(String artistName){
         String modelQuery = getArtist(artistName);
         return artistName.equals(modelQuery);
     }
@@ -187,7 +188,7 @@ public class Database_Control {
      * @param albumName
      * @return 
      */
-    public static boolean checkAlbum(String albumName){
+    public boolean checkAlbum(String albumName){
         String modelQuery = getAlbum(albumName);
         return albumName.equals(modelQuery);
     }
@@ -199,7 +200,7 @@ public class Database_Control {
      * @param artistName
      * @return
      */
-    public static boolean addArtist(String artistName){
+    public boolean addArtist(String artistName){
         if(checkArtist(artistName)){
             model.createResource(root + artistName).addProperty(RDF.type, Artist)
                     .addLiteral(NameP, artistName);
@@ -218,7 +219,7 @@ public class Database_Control {
      * @param artistName
      * @return 
      */
-    public static boolean addAlbum(String albumName,String artistName){
+    public boolean addAlbum(String albumName,String artistName){
         if(checkAlbum(albumName)){
             Resource album = model.createResource(root + albumName).addProperty(RDF.type, Album);
             model.getResource(root + artistName).addProperty(ReleasedP, album);
@@ -238,7 +239,7 @@ public class Database_Control {
      * @param artistName
      * @return 
      */
-    public static boolean addSong(String songName, String albumName, String artistName){
+    public boolean addSong(String songName, String albumName, String artistName){
         if(checkSong(songName)){
             Resource song = model.createResource(root + songName).addProperty(RDF.type, Song)
                     .addProperty(Appears_onP, root + albumName);
@@ -250,15 +251,15 @@ public class Database_Control {
         return false;
     }
     
-    public static boolean removeArtist(String artistName){
+    public boolean removeArtist(String artistName){
         
         return false;
     }
-    public static boolean removeAlbum(String albumName){
+    public boolean removeAlbum(String albumName){
         
         return false;
     }
-    public static boolean removeSong(String songName){
+    public boolean removeSong(String songName){
         
         return false;
     }
@@ -268,7 +269,7 @@ public class Database_Control {
      * @param artistName
      * @return 
      */
-    public static String getArtist(String artistName){
+    public String getArtist(String artistName){
         String queryString = "PREFIX root: <http://somewhere/Music#> "
                 + "select ?o where { "
                 + "root:"+artistName+" a root:Artist . "
@@ -285,7 +286,7 @@ public class Database_Control {
      * @param albumName
      * @return 
      */
-    public static String getAlbum(String albumName){
+    public String getAlbum(String albumName){
         String queryString = "PREFIX root: <http://somewhere/Music#> "
                 + "select ?o where { "
                 + "root:"+albumName+" a root:Album . "
@@ -302,7 +303,7 @@ public class Database_Control {
      * @param songName
      * @return 
      */
-    public static String getSong(String songName){
+    public String getSong(String songName){
         String queryString = "PREFIX root: <http://somewhere/Music#> "
                 + "select ?o where { "
                 + "root:"+songName+" a root:Album . "
@@ -315,25 +316,25 @@ public class Database_Control {
         return resultString;
     }
     
-    public static void getSongJSON(String songName){
+    public void getSongJSON(String songName){
         
     }
-    public static void getAlbumJSON(String albumName){
+    public void getAlbumJSON(String albumName){
         
     }
-    public static void getArtistJSON(String artistName){
+    public void getArtistJSON(String artistName){
         
     }
     
-    public static String[] getAllArtists(){
+    public String[] getAllArtists(){
         
         return null;
     }
-    public static String[] getAllAlbums(String ArtistName){
+    public String[] getAllAlbums(String ArtistName){
         
         return null;
     }
-    public static String[] getAllSongs(String albumName){
+    public String[] getAllSongs(String albumName){
         
         return null;
     }
