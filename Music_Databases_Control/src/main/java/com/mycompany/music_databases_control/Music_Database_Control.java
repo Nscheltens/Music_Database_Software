@@ -14,20 +14,24 @@ import java.util.concurrent.TimeUnit;
 
 /**
  *
- * @author Cole
+ * @author Nick Scheltens
  */
 public class Music_Database_Control{
+    
+    // derive from JSON
+    public static final String OS = "Linux";
+    public final String DefaultDirectory = "D:\\TestCollection";
+    
     private static final java.io.PrintStream OUT = System.out;
-    private Database_Control database = new Database_Control();
-    private Data_Scanner scan = new Data_Scanner();
+    private final Database_Control database = new Database_Control();
+    private final Data_Scanner SCAN = new Data_Scanner(database, DefaultDirectory);
     private final Updater UPPER = new Updater();
     
     public Music_Database_Control() {
         //(new Music_Database_Control()).start();
         Control_Update();
         Input();
-    }
-    
+    } 
     public static void main(String[] args){
         for(String arg: args){
             OUT.println(arg);
@@ -38,14 +42,30 @@ public class Music_Database_Control{
         OUT.println("this Tread will wait and refresh the database");
         UPPER.Database_Updater();
     }
-    private void launchScanner(){
+    private void Input(){
+        OUT.println("this Tread will wait for input of user actions");
+        Scanner in = new Scanner(System.in);
+        OUT.print(">");
+        while(in.hasNext()){
+            String input = in.nextLine();
+            //OUT.println(input);
+            int des = Parse_Eval(input);
+            if(des == 1){
+                in.close();
+                return;
+            }
+            else if(des == -1) OUT.println("Incorrect usage type help to see commands");
+            OUT.print(">");
+        }
     }
-    private void luanchTranscoder(){
-        
+    
+    private void luanchTranscoder(){      
     }
-    private void launchControl(){
-        
-    }
+    
+    /**
+     * 
+     * @return 
+     */
     private int exitProgram(){
         OUT.println("shutting down scheduler");
         UPPER.Updater_Shutdown();
@@ -70,15 +90,22 @@ public class Music_Database_Control{
         return 0;
     }
     private int runQuary(String Quary){
-        return 0;
+        //Handel non zero int
+        int check = database.quaryDatabase(Quary);
+        return check;
     }
+    /**
+     * executes the find command from the controller
+     * @param params
+     * @return 
+     */
     private int findQuary(String[] params){
         OUT.println(params.length);
         if(params.length < 3) return -1;
         String name = params[2];
         if(params.length > 3){
             for(int i = 3; i < params.length; i++){
-                name = name +" "+params[i];
+                name = name +"_"+params[i];
             }
         }
         OUT.println("this is the name "+name);
@@ -96,13 +123,26 @@ public class Music_Database_Control{
                 return 0;
         }
     }
-    private int scanFile(String[] Params){
+    private int scanFile(String[] params){
         //build Data_Scanner class
-        return 0;
+        String path = params[2];
+        for(int i = 3;i < params.length; i++){
+            path = path +" "+ params[i];
+        } 
+        switch(params[1]){
+            default: return -1;
+            case "Artist": SCAN.ScanForArtists(path);
+                return 0;
+            case "Album": SCAN.ScanForAlbums(path);
+                return 0;
+            case "Song": SCAN.ScanForSongs(path);
+                return 0;
+        }
     }
     private int updateDatabase(){
         return 0;
     }
+    
     private int Parse_Eval(String statment){
         int ReturnInt;
         String[] tokens = statment.split(" ");
@@ -124,28 +164,16 @@ public class Music_Database_Control{
         }
     }
     
-    private void Input(){
-        OUT.println("this Tread will wait for input of user actions");
-        Scanner in = new Scanner(System.in);
-        OUT.print(">");
-        while(in.hasNext()){
-            String input = in.nextLine();
-            //OUT.println(input);
-            int des = Parse_Eval(input);
-            if(des == 1) return;
-            else if(des == -1) OUT.println("Incorrect usage type help to see commands");
-            OUT.print(">");
-        }
-    }
     /**
      * 
      */
+    //change update class to acutally update
     private class Updater{
         private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         
         public void Database_Updater(){
             final Runnable updater = new Runnable() {
-                public void run() {OUT.println("updating database");}
+                public void run() { OUT.println("updating database"); }
             };
             // change timing to a more reasonable time to update database
             final ScheduledFuture<?> updateHandle = scheduler.scheduleAtFixedRate(updater, 10, 10, TimeUnit.SECONDS);

@@ -159,9 +159,18 @@ public class Database_Control {
         }
         return true;
     }
-    public boolean writeJSON(String location, String writeString){
-        
-        return false;
+    
+    public int quaryDatabase(String queryString){
+        try{
+            Query query = QueryFactory.create(queryString);
+            QueryExecution qe = QueryExecutionFactory.create(query, model);
+            ResultSet results = qe.execSelect();
+            ResultSetFormatter.out(System.out, results, query);
+            qe.close();
+        } catch(Exception e){
+            return 1;
+        }
+        return 0;
     }
     
     /**
@@ -275,10 +284,17 @@ public class Database_Control {
                 + "root:"+artistName+" a root:Artist . "
                 + "root:"+artistName+" root:Name ?o . "
                 + "}";
+        //System.out.println(queryString);
         Query query = QueryFactory.create(queryString);
         QueryExecution qe = QueryExecutionFactory.create(query, model);
         ResultSet results = qe.execSelect();
-        String resultString = results.next().getLiteral("o").getString();
+        String resultString;
+        try{
+            resultString = results.next().getLiteral("o").getString();
+        } catch(Exception e){
+            resultString = null;
+        }
+        qe.close();
         return resultString;
     }
     /**
@@ -296,6 +312,7 @@ public class Database_Control {
         QueryExecution qe = QueryExecutionFactory.create(query, model);
         ResultSet results = qe.execSelect();
         String resultString = results.next().getLiteral("o").getString();
+        qe.close();
         return resultString;
     }
     /**
@@ -313,17 +330,8 @@ public class Database_Control {
         QueryExecution qe = QueryExecutionFactory.create(query, model);
         ResultSet results = qe.execSelect();
         String resultString = results.next().getLiteral("o").getString();
+        qe.close();
         return resultString;
-    }
-    
-    public void getSongJSON(String songName){
-        
-    }
-    public void getAlbumJSON(String albumName){
-        
-    }
-    public void getArtistJSON(String artistName){
-        
     }
     
     public String[] getAllArtists(){
