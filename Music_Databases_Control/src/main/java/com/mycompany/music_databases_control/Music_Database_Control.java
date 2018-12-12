@@ -67,7 +67,7 @@ public class Music_Database_Control{
      * @return 
      */
     private int exitProgram(){
-        OUT.println("shutting down scheduler");
+        OUT.println("shuting down scheduler");
         UPPER.Updater_Shutdown();
         return 1;
     }
