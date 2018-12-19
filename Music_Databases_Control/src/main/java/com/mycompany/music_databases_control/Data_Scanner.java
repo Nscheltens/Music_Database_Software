@@ -20,6 +20,8 @@ public class Data_Scanner {
     // use threads
     public final String DefaultDirectory;
     private final Database_Control database;
+    private static final java.io.PrintStream OUT = System.out;
+    private final Scanner IN = new Scanner(System.in);
     
     public Data_Scanner(Database_Control d, String derect){
         DefaultDirectory = derect;
@@ -27,23 +29,24 @@ public class Data_Scanner {
     }
     
     public void ScanForSongs(String direct){
-        System.out.println(direct);
+        OUT.println(direct);
         File directory = new File(direct);
         String[] directoryContents = directory.list();
-        System.out.println("Listing files in directory");
+        OUT.println("Listing files in directory");
         String[][] cutList = processSongNames(directoryContents, direct);
         if(cutList.length == 0){
-            System.out.println("No correctly formated files found.");
+            OUT.println("No correctly formated files found.");
         }else{
-            handelFiles(cutList,"Song");
+            handelFiles(cutList,"Song",0);
         }
     }
     private String[][] processSongNames(String[] list, String direct){
         int numSongs = list.length;
         int listMover = 0;
         String[][] cuttingList = new String[list.length][3];
-        Pattern p = Pattern.compile(".+[{.mp3}{.flac}]");
+        Pattern p = Pattern.compile(".+\\.mp3");
         for (String list1 : list) {
+            OUT.println(list1);
             Matcher m = p.matcher(list1);
             if (m.matches()) {
                 //System.out.println("going to cut number off "+list1);
@@ -71,15 +74,16 @@ public class Data_Scanner {
     }
     
     public void ScanForAlbums(String direct){
-        System.out.println(direct);
+        OUT.println(direct);
         File directory = new File(direct);
         String[] directoryContents = directory.list();
-        System.out.println("Listing files in directory");
+        OUT.println("Listing files in directory");
         String[][] cutList = processAlbumNames(directoryContents, direct);
         if(cutList.length == 0){
-            System.out.println("No correctly formated files found.");
+            OUT.println("No correctly formated files found.");
         }else{
-            handelFiles(cutList,"Album");
+            handelFiles(cutList,"Album",1);
+            //requestDive(0);
         }
     }
     private String[][] processAlbumNames(String[] list, String direct){
@@ -116,15 +120,26 @@ public class Data_Scanner {
     }
     
     public void ScanForArtists(String direct){
-        System.out.println(direct);
+        OUT.println(direct);
         File directory = new File(direct);
         String[] directoryContents = directory.list();
-        System.out.println("Listing files in directory");
-        for(String fileName: directoryContents){
-            File temp = new File(directory, fileName);
-            
-            System.out.println(fileName);
+        OUT.println("Listing files in directory");
+        String[][] cutList = processArtistNames(directoryContents, direct);
+        if(cutList.length == 0){
+            OUT.println("No correctly formated files found.");
+        }else{
+            handelFiles(cutList,"Artist",2);
         }
+    }
+    private String[][] processArtistNames(String[] list, String direct){
+        String[][] cuttingList = new String[list.length][2];
+        for (int i = 0;i < list.length; i++) {
+            cuttingList[i][0] = list[i];
+            
+            File path = new File(direct, list[i]);
+            cuttingList[i][1] = path.getAbsolutePath();
+        }
+        return cuttingList;
     }
     
     private void AlbumNameHnadeler(String SongName){
@@ -133,22 +148,52 @@ public class Data_Scanner {
     private void ArtistNameHnadeler(String SongName){
         
     }
-    private void handelFiles(String[][] items, String type){
-        Scanner in = new Scanner(System.in);
-        System.out.println("Scanner found these "+type+"s");
-        System.out.println("-------------------------------------------------");
+    private void handelFiles(String[][] items, String type, int dive){
+        OUT.println("Scanner found these "+type+"s");
+        OUT.println("-------------------------------------------------");
         for (String[] item : items) {
-            System.out.println(item[0]);
+            OUT.println(item[0]);
         }
-        System.out.println("-------------------------------------------------");
-        System.out.println("add these files to the database? (y = yes)");
-        String anw = in.next();
-        if(anw.equals("y")){
-            System.out.println("Adding files to the database");
-        }else{
-            System.out.println("Not adding files to the database");
-            // give examples of proper file names
+        OUT.println("-------------------------------------------------");
+        OUT.println("add these files to the database? (y = yes, l = list individuals)");
+        String anw = IN.next();
+        switch (anw) {
+            case "y":
+                OUT.println("Adding files to the database");
+                if(dive == 0){
+                    return;
+                }else{
+                    OUT.println("These are "+type+"'s would you like to scan deeper for albums/songs? (y = yes)");
+                    String newAnw = IN.next();
+                    if(newAnw.equals("y")){
+                        OUT.println("Diving deeper for more files");
+                        for(String[] item : items){
+                            if(dive == 1){
+                                ScanForSongs(item[1]);
+                            }
+                            else{
+                                ScanForAlbums(item[1]);
+                            }
+                        }
+                    }
+                    else{
+                        OUT.println("Not diving for more files");
+                    }
+                }
+                break;
+            case "l":
+                handelFilesList(items,type,dive);
+                break;
+            default:
+                OUT.println("Not adding files to the database");
+                // give examples of proper file names
+                break;
         }
     }
-    
+    private void handelFilesList(String[][] items, String type, int dive){
+        
+    }
+    private void requestDive(int type){
+        
+    }
 }
