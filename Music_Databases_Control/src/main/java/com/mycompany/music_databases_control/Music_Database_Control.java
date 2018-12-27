@@ -131,11 +131,11 @@ public class Music_Database_Control{
         } 
         switch(params[1]){
             default: return -1;
-            case "Artist": SCAN.ScanForArtists(path);
+            case "Artist": SCAN.ScanForArtists(path, false);
                 return 0;
-            case "Album": SCAN.ScanForAlbums(path);
+            case "Album": SCAN.ScanForAlbums(path, false);
                 return 0;
-            case "Song": SCAN.ScanForSongs(path);
+            case "Song": SCAN.ScanForSongs(path, false);
                 return 0;
         }
     }
