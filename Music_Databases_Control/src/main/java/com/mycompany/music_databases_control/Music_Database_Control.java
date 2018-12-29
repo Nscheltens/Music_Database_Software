@@ -135,7 +135,7 @@ public class Music_Database_Control{
                 return 0;
             case "Album": SCAN.ScanForAlbums(path, false);
                 return 0;
-            case "Song": SCAN.ScanForSongs(path, false);
+            case "Song": SCAN.ScanForSongs(path, false, "Unasigned", "Unasigned");
                 return 0;
         }
     }

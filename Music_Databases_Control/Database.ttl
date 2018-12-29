@@ -2,25 +2,130 @@
 @prefix root:  <http://somewhere/Music#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
+root:Released  a     owl:ObjectProperty ;
+        rdfs:domain  root:Artist ;
+        rdfs:range   root:Album .
+
+root:Path  a    owl:DatatypeProperty .
+
+root:The_Information  a  root:Album ;
+        root:Date      "[2006-10-03]" ;
+        root:Filetype  "FLAC 16-44.1" ;
+        root:Name      "The Information" ;
+        root:Path      "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)" ;
+        root:Rip       "CD B0007601-00" .
+
+root:Strange_Apparition
+        a               root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Strange Apparition" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\04 Strange Apparition.mp3" ;
+        root:TrackNum   "04" .
+
+root:Soldier_Jane  a    root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Soldier Jane" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\05 Soldier Jane.mp3" ;
+        root:TrackNum   "05" .
+
+root:The_Horrible_Fanfare__Landslide__Exoskeleton
+        a               root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "The Horrible Fanfare, Landslide, Exoskeleton" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\15 The Horrible Fanfare, Landslide, Exoskeleton.mp3" ;
+        root:TrackNum   "15" .
+
+root:Album  a   owl:Class .
+
+root:Artist  a  owl:Class .
+
+root:TrackNum  a  owl:DatatypeProperty .
+
+root:Elevator_Music  a  root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Elevator Music" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\01 Elevator Music.mp3" ;
+        root:TrackNum   "01" .
+
+root:Beck  root:Released  root:The_Information ;
+        root:Sings     root:Cellphone_s_Dead , root:Dark_Star , root:Motorcade , root:Movie_Theme , root:Elevator_Music , root:The_Horrible_Fanfare__Landslide__Exoskeleton , root:No_Complaints , root:Nausea , root:1000BPM , root:Strange_Apparition , root:Think_I_m_in_Love , root:New_Round , root:Soldier_Jane , root:We_Dance_Alone .
+
+root:Nausea  a          root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Nausea" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\06 Nausea.mp3" ;
+        root:TrackNum   "06" .
+
+root:Dark_Star  a       root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Dark Star" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\08 Dark Star.mp3" ;
+        root:TrackNum   "08" .
+
+root:Filetype  a  owl:DatatypeProperty .
+
+root:1000BPM  a         root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "1000BPM" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\11 1000BPM.mp3" ;
+        root:TrackNum   "11" .
+
+root:Motorcade  a       root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Motorcade" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\12 Motorcade.mp3" ;
+        root:TrackNum   "12" .
+
+root:Date  a    owl:DatatypeProperty .
+
 root:AppearsOn  a    owl:ObjectProperty ;
         rdfs:domain  root:Song ;
         rdfs:range   root:Album .
+
+root:We_Dance_Alone  a  root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "We Dance Alone" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\09 We Dance Alone.mp3" ;
+        root:TrackNum   "09" .
+
+root:New_Round  a       root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "New Round" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\07 New Round.mp3" ;
+        root:TrackNum   "07" .
+
+root:Movie_Theme  a     root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Movie Theme" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\14 Movie Theme.mp3" ;
+        root:TrackNum   "14" .
+
+root:Rip  a     owl:DatatypeProperty .
+
+root:Think_I_m_in_Love
+        a               root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Think I’m in Love" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\02 Think I’m in Love.mp3" ;
+        root:TrackNum   "02" .
+
+root:Cellphone_s_Dead
+        a               root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Cellphone’s Dead" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\03 Cellphone’s Dead.mp3" ;
+        root:TrackNum   "03" .
+
+root:Name  a    owl:DatatypeProperty .
+
+root:No_Complaints  a   root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "No Complaints" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\10 No Complaints.mp3" ;
+        root:TrackNum   "10" .
 
 root:Song  a    owl:Class .
 
 root:Sings  a        owl:ObjectProperty ;
         rdfs:domain  root:Artist ;
         rdfs:range   root:Song .
-
-root:Name  a    owl:DatatypeProperty .
-
-root:Album  a   owl:Class .
-
-root:Released  a     owl:ObjectProperty ;
-        rdfs:domain  root:Artist ;
-        rdfs:range   root:Album .
-
-root:Artist  a  owl:Class .
-
-root:TimP	a	root:Artist;
-		root:Name	"TimP"

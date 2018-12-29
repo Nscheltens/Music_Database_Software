@@ -28,12 +28,12 @@ public class Data_Scanner {
         database = d;
     }
     
-    public void ScanForSongs(String direct, boolean auto){
+    public void ScanForSongs(String direct, boolean auto, String Artist, String Album){
         OUT.println(direct);
         File directory = new File(direct);
         String[] directoryContents = directory.list();
         OUT.println("Listing files in directory");
-        String[][] cutList = processSongNames(directoryContents, direct);
+        String[][] cutList = processSongNames(directoryContents, direct, Artist, Album);
         if(cutList.length == 0){
             OUT.println("No correctly formatted files found.");
         }else{
@@ -45,13 +45,13 @@ public class Data_Scanner {
             }
         }
     }
-    private String[][] processSongNames(String[] list, String direct){
+    private String[][] processSongNames(String[] list, String direct, String Artist, String Album){
         int numSongs = list.length;
         int listMover = 0;
-        String[][] cuttingList = new String[list.length][3];
+        String[][] cuttingList = new String[list.length][5];
         Pattern p = Pattern.compile(".+\\.mp3");
         for (String list1 : list) {
-            OUT.println(list1);
+            //OUT.println(list1);
             Matcher m = p.matcher(list1);
             if (m.matches()) {
                 //System.out.println("going to cut number off "+list1);
@@ -63,12 +63,18 @@ public class Data_Scanner {
                 
                 //System.out.println("adding "+SongName[0]);
                 cuttingList[listMover][0] = SongName[0];
+                
                 File path = new File(direct, list1);
                 //System.out.println("adding "+path.getAbsolutePath());
                 cuttingList[listMover][1] = path.getAbsolutePath();
+                
                 String[] num = list1.split(" ");
                 //System.out.println("adding "+num[0]);
                 cuttingList[listMover][2] = num[0];
+                
+                cuttingList[listMover][3] = Album;
+                
+                cuttingList[listMover][4] = Artist;
                 listMover++;
             } else {
                 numSongs--;
@@ -87,8 +93,12 @@ public class Data_Scanner {
         if(cutList.length == 0){
             OUT.println("No correctly formatted files found.");
         }else{
-            handleFiles(cutList,"Album",1);
-            //requestDive(0);
+            if(auto){
+                handleAutoFiles(cutList, 1);
+            }
+            else{
+                handleFiles(cutList,"Album",1);
+            }
         }
     }
     private String[][] processAlbumNames(String[] list, String direct){
@@ -133,7 +143,12 @@ public class Data_Scanner {
         if(cutList.length == 0){
             OUT.println("No correctly formatted files found.");
         }else{
-            handleFiles(cutList,"Artist",2);
+            if(auto){
+                handleAutoFiles(cutList, 2);
+            }
+            else{
+                handleFiles(cutList,"Artist",2);
+            }
         }
     }
     private String[][] processArtistNames(String[] list, String direct){
@@ -159,6 +174,11 @@ public class Data_Scanner {
         switch (anw) {
             case "y":
                 OUT.println("Adding files to the database");
+                for(String[] item : items){
+                    boolean check = checkAdd(item, dive);
+                    if(check) OUT.println("Successfully added.");
+                    else OUT.println("failed to add.");
+                }
                 if(dive == 0){
                     return;
                 }else{
@@ -168,7 +188,7 @@ public class Data_Scanner {
                         OUT.println("Diving deeper for more files");
                         for(String[] item : items){
                             if(dive == 1){
-                                ScanForSongs(item[1], false);
+                                ScanForSongs(item[1], false, item[3], item[0]);
                             }
                             else{
                                 ScanForAlbums(item[1], false);
@@ -201,6 +221,9 @@ public class Data_Scanner {
             switch (anw) {
             case "y":
                 OUT.println("Adding file to the database");
+                boolean check = checkAdd(item, dive);
+                if(check) OUT.println("Successfully added.");
+                else OUT.println("failed to add.");
                 if(dive == 0){
                     return;
                 }else{
@@ -209,7 +232,7 @@ public class Data_Scanner {
                     if(newAnw.equals("y")){
                         OUT.println("Diving deeper for more files");
                             if(dive == 1){
-                                ScanForSongs(item[1], false);
+                                ScanForSongs(item[1], false, item[3], item[0]);
                             }
                             else{
                                 ScanForAlbums(item[1], false);
@@ -236,12 +259,42 @@ public class Data_Scanner {
             }
             else{
                 if(level == 1){
-                    ScanForSongs(item[1], true);
+                    ScanForSongs(item[1], true, item[3], item[0]);
                 }
                 else{
                     ScanForAlbums(item[1], true);
                 }
             }
+        }
+    }
+    
+    private boolean checkAdd(String[] item, int level){
+        boolean check;
+        switch(level){
+            case 0: check = database.checkSong(item[0]);
+                break;
+            case 1: check = database.checkAlbum(item[0]);
+                break;
+            case 2: check = database.checkArtist(item[0]);
+                break;
+            default: check = false;
+                break;
+        }
+        if(!check){
+            boolean addCheck;
+            switch(level){
+                case 0: addCheck = database.addSong(item);
+                    break;
+                case 1: addCheck = database.addAlbum(item);
+                    break;
+                case 2: addCheck = database.addArtist(item);
+                    break;
+                default: addCheck = false;
+                    break;
+            }
+            return addCheck;
+        }else{
+            return false;
         }
     }
 }
