@@ -2,18 +2,41 @@
 @prefix root:  <http://somewhere/Music#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
-root:Released  a     owl:ObjectProperty ;
+root:Broken_Train  a    root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Broken Train" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\07 Broken Train.mp3" ;
+        root:TrackNum   "07" .
+
+root:Get_Real_Paid  a   root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Get Real Paid" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\04 Get Real Paid.mp3" ;
+        root:TrackNum   "04" .
+
+root:Sings  a        owl:ObjectProperty ;
         rdfs:domain  root:Artist ;
-        rdfs:range   root:Album .
+        rdfs:range   root:Song .
 
-root:Path  a    owl:DatatypeProperty .
+root:1000BPM  a         root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "1000BPM" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\11 1000BPM.mp3" ;
+        root:TrackNum   "11" .
 
-root:The_Information  a  root:Album ;
-        root:Date      "[2006-10-03]" ;
-        root:Filetype  "FLAC 16-44.1" ;
-        root:Name      "The Information" ;
-        root:Path      "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)" ;
-        root:Rip       "CD B0007601-00" .
+root:Name  a    owl:DatatypeProperty .
+
+root:Rip  a     owl:DatatypeProperty .
+
+root:Mixed_Bizness  a   root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Mixed Bizness" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\03 Mixed Bizness.mp3" ;
+        root:TrackNum   "03" .
+
+root:B.B._King  a  root:Artist ;
+        root:Name  "B.B. King" ;
+        root:Path  "D:\\TestCollection\\B.B. King" .
 
 root:Strange_Apparition
         a               root:Song ;
@@ -22,77 +45,9 @@ root:Strange_Apparition
         root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\04 Strange Apparition.mp3" ;
         root:TrackNum   "04" .
 
-root:Soldier_Jane  a    root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "Soldier Jane" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\05 Soldier Jane.mp3" ;
-        root:TrackNum   "05" .
-
-root:The_Horrible_Fanfare__Landslide__Exoskeleton
-        a               root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "The Horrible Fanfare, Landslide, Exoskeleton" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\15 The Horrible Fanfare, Landslide, Exoskeleton.mp3" ;
-        root:TrackNum   "15" .
-
-root:Album  a   owl:Class .
-
-root:Artist  a  owl:Class .
-
 root:TrackNum  a  owl:DatatypeProperty .
 
-root:Elevator_Music  a  root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "Elevator Music" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\01 Elevator Music.mp3" ;
-        root:TrackNum   "01" .
-
-root:Beck  root:Released  root:The_Information ;
-        root:Sings     root:Cellphone_s_Dead , root:Dark_Star , root:Motorcade , root:Movie_Theme , root:Elevator_Music , root:The_Horrible_Fanfare__Landslide__Exoskeleton , root:No_Complaints , root:Nausea , root:1000BPM , root:Strange_Apparition , root:Think_I_m_in_Love , root:New_Round , root:Soldier_Jane , root:We_Dance_Alone .
-
-root:Nausea  a          root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "Nausea" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\06 Nausea.mp3" ;
-        root:TrackNum   "06" .
-
-root:Dark_Star  a       root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "Dark Star" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\08 Dark Star.mp3" ;
-        root:TrackNum   "08" .
-
-root:Filetype  a  owl:DatatypeProperty .
-
-root:1000BPM  a         root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "1000BPM" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\11 1000BPM.mp3" ;
-        root:TrackNum   "11" .
-
-root:Motorcade  a       root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "Motorcade" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\12 Motorcade.mp3" ;
-        root:TrackNum   "12" .
-
-root:Date  a    owl:DatatypeProperty .
-
-root:AppearsOn  a    owl:ObjectProperty ;
-        rdfs:domain  root:Song ;
-        rdfs:range   root:Album .
-
-root:We_Dance_Alone  a  root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "We Dance Alone" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\09 We Dance Alone.mp3" ;
-        root:TrackNum   "09" .
-
-root:New_Round  a       root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "New Round" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\07 New Round.mp3" ;
-        root:TrackNum   "07" .
+root:Path  a    owl:DatatypeProperty .
 
 root:Movie_Theme  a     root:Song ;
         root:AppearsOn  "http://somewhere/Music#The_Information" ;
@@ -100,23 +55,106 @@ root:Movie_Theme  a     root:Song ;
         root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\14 Movie Theme.mp3" ;
         root:TrackNum   "14" .
 
-root:Rip  a     owl:DatatypeProperty .
+root:Artist  a  owl:Class .
 
-root:Think_I_m_in_Love
+root:Beautiful_Way  a   root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Beautiful Way" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\09 Beautiful Way.mp3" ;
+        root:TrackNum   "09" .
+
+root:Song  a    owl:Class .
+
+root:Released  a     owl:ObjectProperty ;
+        rdfs:domain  root:Artist ;
+        rdfs:range   root:Album .
+
+root:AppearsOn  a    owl:ObjectProperty ;
+        rdfs:domain  root:Song ;
+        rdfs:range   root:Album .
+
+root:Nicotine__Gravy  a  root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Nicotine & Gravy" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\02 Nicotine & Gravy.mp3" ;
+        root:TrackNum   "02" .
+
+root:Elevator_Music  a  root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Elevator Music" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\01 Elevator Music.mp3" ;
+        root:TrackNum   "01" .
+
+root:Soldier_Jane  a    root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Soldier Jane" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\05 Soldier Jane.mp3" ;
+        root:TrackNum   "05" .
+
+root:Think_Im_in_Love
         a               root:Song ;
         root:AppearsOn  "http://somewhere/Music#The_Information" ;
         root:Name       "Think I’m in Love" ;
         root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\02 Think I’m in Love.mp3" ;
         root:TrackNum   "02" .
 
-root:Cellphone_s_Dead
+root:Hollywood_Freaks
         a               root:Song ;
-        root:AppearsOn  "http://somewhere/Music#The_Information" ;
-        root:Name       "Cellphone’s Dead" ;
-        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\03 Cellphone’s Dead.mp3" ;
-        root:TrackNum   "03" .
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Hollywood Freaks" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\05 Hollywood Freaks.mp3" ;
+        root:TrackNum   "05" .
 
-root:Name  a    owl:DatatypeProperty .
+root:Midnite_Vultures
+        a              root:Album ;
+        root:Date      "[1999-11-23]" ;
+        root:Filetype  "FLAC 16-44.1" ;
+        root:Name      "Midnite Vultures" ;
+        root:Path      "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)" ;
+        root:Rip       "CD 0694904852" .
+
+root:Nausea  a          root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Nausea" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\06 Nausea.mp3" ;
+        root:TrackNum   "06" .
+
+root:Beck  a           root:Artist ;
+        root:Name      "Beck" ;
+        root:Path      "D:\\TestCollection\\Beck" ;
+        root:Released  root:The_Information , root:Midnite_Vultures ;
+        root:Sings     root:Dark_Star , root:Motorcade , root:Think_Im_in_Love , root:Debra , root:Peaches__Cream , root:Mixed_Bizness , root:Movie_Theme , root:Beautiful_Way , root:Elevator_Music , root:Pressure_Zone , root:No_Complaints , root:Nausea , root:Nicotine__Gravy , root:1000BPM , root:Broken_Train , root:Strange_Apparition , root:Milk__Honey , root:Sexx_Laws , root:The_Horrible_Fanfare_Landslide_Exoskeleton , root:Cellphones_Dead , root:New_Round , root:Soldier_Jane , root:The_Information , root:Hollywood_Freaks , root:We_Dance_Alone , root:Get_Real_Paid .
+
+root:We_Dance_Alone  a  root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "We Dance Alone" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\09 We Dance Alone.mp3" ;
+        root:TrackNum   "09" .
+
+root:Filetype  a  owl:DatatypeProperty .
+
+root:Peaches__Cream  a  root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Peaches & Cream" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\06 Peaches & Cream.mp3" ;
+        root:TrackNum   "06" .
+
+root:Barenaked_Ladies
+        a          root:Artist ;
+        root:Name  "Barenaked Ladies" ;
+        root:Path  "D:\\TestCollection\\Barenaked Ladies" .
+
+root:New_Round  a       root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "New Round" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\07 New Round.mp3" ;
+        root:TrackNum   "07" .
+
+root:Dark_Star  a       root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Dark Star" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\08 Dark Star.mp3" ;
+        root:TrackNum   "08" .
 
 root:No_Complaints  a   root:Song ;
         root:AppearsOn  "http://somewhere/Music#The_Information" ;
@@ -124,8 +162,62 @@ root:No_Complaints  a   root:Song ;
         root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\10 No Complaints.mp3" ;
         root:TrackNum   "10" .
 
-root:Song  a    owl:Class .
+root:Sexx_Laws  a       root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Sexx Laws" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\01 Sexx Laws.mp3" ;
+        root:TrackNum   "01" .
 
-root:Sings  a        owl:ObjectProperty ;
-        rdfs:domain  root:Artist ;
-        rdfs:range   root:Song .
+root:Baby_Reflection  a  root:Artist ;
+        root:Name  "Baby Reflection" ;
+        root:Path  "D:\\TestCollection\\Baby Reflection" .
+
+root:Date  a    owl:DatatypeProperty .
+
+root:Cellphones_Dead  a  root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Cellphone’s Dead" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\03 Cellphone’s Dead.mp3" ;
+        root:TrackNum   "03" .
+
+root:The_Horrible_Fanfare_Landslide_Exoskeleton
+        a               root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "The Horrible Fanfare, Landslide, Exoskeleton" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\15 The Horrible Fanfare, Landslide, Exoskeleton.mp3" ;
+        root:TrackNum   "15" .
+
+root:Debra  a           root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Debra" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\11 Debra.mp3" ;
+        root:TrackNum   "11" .
+
+root:Album  a   owl:Class .
+
+root:The_Information  a  root:Song , root:Album ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Date       "[2006-10-03]" ;
+        root:Filetype   "FLAC 16-44.1" ;
+        root:Name       "The Information" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)" , "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\13 The Information.mp3" ;
+        root:Rip        "CD B0007601-00" ;
+        root:TrackNum   "13" .
+
+root:Pressure_Zone  a   root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Pressure Zone" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\10 Pressure Zone.mp3" ;
+        root:TrackNum   "10" .
+
+root:Motorcade  a       root:Song ;
+        root:AppearsOn  "http://somewhere/Music#The_Information" ;
+        root:Name       "Motorcade" ;
+        root:Path       "D:\\TestCollection\\Beck\\[2006-10-03] Beck - The Information {CD B0007601-00} (FLAC 16-44.1)\\12 Motorcade.mp3" ;
+        root:TrackNum   "12" .
+
+root:Milk__Honey  a     root:Song ;
+        root:AppearsOn  "http://somewhere/Music#Midnite_Vultures" ;
+        root:Name       "Milk & Honey" ;
+        root:Path       "D:\\TestCollection\\Beck\\[1999-11-23] Beck - Midnite Vultures {CD 0694904852} (FLAC 16-44.1)\\08 Milk & Honey.mp3" ;
+        root:TrackNum   "08" .

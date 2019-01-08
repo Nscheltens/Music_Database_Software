@@ -29,16 +29,16 @@ public class Data_Scanner {
     }
     
     public void ScanForSongs(String direct, boolean auto, String Artist, String Album){
-        OUT.println(direct);
+        //OUT.println(direct);
         File directory = new File(direct);
         String[] directoryContents = directory.list();
-        OUT.println("Listing files in directory");
+        if(!auto) OUT.println("Listing files in directory");
         String[][] cutList = processSongNames(directoryContents, direct, Artist, Album);
         if(cutList.length == 0){
-            OUT.println("No correctly formatted files found.");
+            if(!auto) OUT.println("No correctly formatted files found.");
         }else{
             if(auto){
-                handleAutoFiles(cutList, 0);
+                handleAutoFiles(cutList, "Song", 0);
             }
             else{
                 handleFiles(cutList,"Song",0);
@@ -85,16 +85,16 @@ public class Data_Scanner {
     }
     
     public void ScanForAlbums(String direct, boolean auto){
-        OUT.println(direct);
+        //OUT.println(direct);
         File directory = new File(direct);
         String[] directoryContents = directory.list();
-        OUT.println("Listing files in directory");
+        if(!auto) OUT.println("Listing files in directory");
         String[][] cutList = processAlbumNames(directoryContents, direct);
         if(cutList.length == 0){
-            OUT.println("No correctly formatted files found.");
+            if(!auto) OUT.println("No correctly formatted files found.");
         }else{
             if(auto){
-                handleAutoFiles(cutList, 1);
+                handleAutoFiles(cutList,"Album", 1);
             }
             else{
                 handleFiles(cutList,"Album",1);
@@ -135,16 +135,16 @@ public class Data_Scanner {
     }
     
     public void ScanForArtists(String direct, boolean auto){
-        OUT.println(direct);
+        //OUT.println(direct);
         File directory = new File(direct);
         String[] directoryContents = directory.list();
-        OUT.println("Listing files in directory");
+        if(!auto) OUT.println("Listing files in directory");
         String[][] cutList = processArtistNames(directoryContents, direct);
         if(cutList.length == 0){
-            OUT.println("No correctly formatted files found.");
+            if(!auto) OUT.println("No correctly formatted files found.");
         }else{
             if(auto){
-                handleAutoFiles(cutList, 2);
+                handleAutoFiles(cutList, "Artist", 2);
             }
             else{
                 handleFiles(cutList,"Artist",2);
@@ -250,10 +250,11 @@ public class Data_Scanner {
             }
         }
     }
-    private void handleAutoFiles(String[][] items, int level){
+    private void handleAutoFiles(String[][] items, String type, int level){
         for(String [] item : items){
-            OUT.println("adding "+ item[0]);
+            //OUT.println("adding ["+type+"] "+ item[0]);
             //call database to add file
+            AutocheckAdd(item,level);
             if(level == 0){
                 
             }
@@ -290,10 +291,43 @@ public class Data_Scanner {
                 case 2: addCheck = database.addArtist(item);
                     break;
                 default: addCheck = false;
+                    OUT.println("Failed to add "+item[0]);
                     break;
             }
             return addCheck;
         }else{
+            OUT.println(item[0]+" already exists in the database");
+            return false;
+        }
+    }
+    private boolean AutocheckAdd(String[] item, int level){
+        boolean check;
+        switch(level){
+            case 0: check = database.checkSong(item[0]);
+                break;
+            case 1: check = database.checkAlbum(item[0]);
+                break;
+            case 2: check = database.checkArtist(item[0]);
+                break;
+            default: check = false;
+                break;
+        }
+        if(!check){
+            boolean addCheck;
+            switch(level){
+                case 0: addCheck = database.addSong(item);
+                    break;
+                case 1: addCheck = database.addAlbum(item);
+                    break;
+                case 2: addCheck = database.addArtist(item);
+                    break;
+                default: addCheck = false;
+                    OUT.println("Failed to add "+item[0]);
+                    break;
+            }
+            return addCheck;
+        }else{
+            //OUT.println(item[0]+" already exists in the database");
             return false;
         }
     }

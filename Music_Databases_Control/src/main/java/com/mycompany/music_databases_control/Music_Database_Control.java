@@ -140,6 +140,7 @@ public class Music_Database_Control{
         }
     }
     private int updateDatabase(){
+        SCAN.ScanForArtists(DefaultDirectory, true);
         return 0;
     }
     
@@ -173,10 +174,13 @@ public class Music_Database_Control{
         
         public void Database_Updater(){
             final Runnable updater = new Runnable() {
-                public void run() { OUT.println("updating database"); }
+                public void run() {
+                    OUT.println("updating database");
+                    SCAN.ScanForArtists(DefaultDirectory, true);
+                }
             };
             // change timing to a more reasonable time to update database
-            final ScheduledFuture<?> updateHandle = scheduler.scheduleAtFixedRate(updater, 10, 10, TimeUnit.SECONDS);
+            final ScheduledFuture<?> updateHandle = scheduler.scheduleAtFixedRate(updater, 10, 10, TimeUnit.HOURS);
             //remove all below after Input method complete
             /*
             scheduler.schedule(new Runnable() {

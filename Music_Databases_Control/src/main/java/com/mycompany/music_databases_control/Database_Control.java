@@ -6,20 +6,24 @@
 package com.mycompany.music_databases_control;
 
 import java.io.*;
-//import java.util.Iterator;
+
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
-//import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
+
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
-//import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
-//import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
+
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -29,7 +33,7 @@ import org.apache.jena.vocabulary.RDFS;
 
 public class Database_Control {
     
-    private Model model = setModel();
+    private final  Model model = setModel();
     private final String root = "http://somewhere/Music#";
     private Resource Artist, Album, Song;
     private Resource Released, Sings, Appears_on;
@@ -59,7 +63,7 @@ public class Database_Control {
         // Create a new query
         String quaryName = "TimP";
         String queryString = "PREFIX root: <http://somewhere/Music#> "
-                + "select ?o where { root:"+quaryName+" root:Name ?o }";
+                + "select ?x ?p ?o where { ?x ?p ?o }";
  
         Query query = QueryFactory.create(queryString);
  
@@ -84,9 +88,14 @@ public class Database_Control {
         try {
             // Create an empty in-memory model and populate it from the graph
             model = ModelFactory.createDefaultModel();
-            in = new FileInputStream(new File("Database.ttl"));
             
-            model.read(in, null, "TTL"); // null base URI, since model URIs are absolute
+            CharsetDecoder decoder = Charset.forName("windows-1252").newDecoder();
+            //CharsetEncoder encoder = Charset.forName("UTF8").newEncoder();
+            in = new FileInputStream(new File("Database.ttl"));
+            InputStreamReader inR = new InputStreamReader(in, decoder);
+            
+            model.read(inR, null, "TTL"); // null base URI, since model URIs are absolute
+            
             in.close();
         } catch (FileNotFoundException ex) {
             System.err.println("No valid Database detectied, Creating new one");
@@ -99,15 +108,18 @@ public class Database_Control {
                     model.read(in, null, "TTL"); // null base URI, since model URIs are absolute
                     in.close();
                 } catch(Exception e) {
+                    System.err.println("error in setting model1");
                     System.err.println(e.toString());
                 }
             }
         } catch (Exception ex){
+            System.err.println("error in setting model2");
             System.err.println(ex.toString());
         }
         System.out.println("model set successful!");
         return model;
     }
+    
     /**
      * 
      * @param model
@@ -160,9 +172,13 @@ public class Database_Control {
     }
     public boolean writeModel(){
         File file = new File("Database.ttl");
+        CharsetEncoder encoder = Charset.forName("UTF8").newEncoder();
+        //OutputStreamWriter writer = null;
         FileWriter writer = null;
         try {
             //file.createNewFile();
+            FileOutputStream fileStream = new FileOutputStream(file);
+            //writer = new OutputStreamWriter(fileStream, encoder);
             writer = new FileWriter(file);
         } catch (IOException ex) {
             return false;
@@ -230,6 +246,7 @@ public class Database_Control {
                     .addLiteral(NameP, artistList[0])
                     .addLiteral(PathP, artistList[1]);
             if(writeModel()){
+                System.out.println("Successfully added [Artist]"+artistList[0]);
                 return true;
             }
         }
@@ -244,7 +261,6 @@ public class Database_Control {
      * @return 
      */
     public boolean addAlbum(String[] albumList){
-        System.out.print("adding "+albumList[0]);
         if(!checkAlbum(removeSpaces(albumList[0]))){
             Resource album = model.createResource(root + removeSpaces(albumList[0])).addProperty(RDF.type, Album)
                     .addLiteral(NameP, albumList[0])
@@ -254,6 +270,7 @@ public class Database_Control {
                     .addLiteral(FiletypeP, albumList[5]);
             model.getResource(root + removeSpaces(albumList[3])).addProperty(ReleasedP, album);
             if(writeModel()){
+                System.out.println("Successfully added [Album]"+albumList[0]);
                 return true;
             }
         }
@@ -269,7 +286,6 @@ public class Database_Control {
      */
     public boolean addSong(String[] SongList){
         String songName = removeSpaces(SongList[0]);
-        System.out.print("adding "+SongList[0]);
         if(!checkSong(songName)){
             Resource song = model.createResource(root + songName).addProperty(RDF.type, Song)
                     .addProperty(Appears_onP, root + removeSpaces(SongList[3]))
@@ -278,24 +294,26 @@ public class Database_Control {
                     .addLiteral(TrackNumP, SongList[2]);
             model.getResource(root + removeSpaces(SongList[4])).addProperty(SingsP, song);
             if(writeModel()){
+                System.out.println("Successfully added [Song]"+SongList[0]);
                 return true;
             }
         }
         return false;
     }
     private String removeSpaces(String s){
-        String[] sr = s.split(" ");
-        String ret = sr[0];
+        String[] sp = s.split("[\\u2019,\\u0026]");
+        String ret = sp[0];
+        for(int i = 1; i < sp.length; i++){
+            //System.out.println(ret);
+            ret = ret +""+sp[i];
+        }
+        String[] sr = ret.split(" ");
+        ret = sr[0];
         for(int i = 1; i < sr.length; i++){
             ret = ret +"_"+sr[i];
         }
-        String[] sp = ret.split("[\\u2019,]");
-        ret = sp[0];
-        for(int i = 1; i < sp.length; i++){
-            System.out.println(ret);
-            ret = ret +"_"+sp[i];
-        }
-        System.out.println("Removed spaces "+ret);
+        
+        //System.out.println("Removed spaces "+ret);
         return ret;
     }
     
@@ -348,7 +366,7 @@ public class Database_Control {
                 + "root:"+albumName+" a root:Album . "
                 + "root:"+albumName+" root:Name ?o . "
                 + "}";
-        System.out.println(queryString);
+        //System.out.println(queryString);
         Query query = QueryFactory.create(queryString);
         String resultString;
         try (QueryExecution qe = QueryExecutionFactory.create(query, model)) {
@@ -369,10 +387,10 @@ public class Database_Control {
     public String getSong(String songName){
         String queryString = "PREFIX root: <http://somewhere/Music#> "
                 + "select ?o where { "
-                + "root:"+songName+" a root:Album . "
+                + "root:"+songName+" a root:Song . "
                 + "root:"+songName+" root:Name ?o . "
                 + "}";
-        System.out.println(queryString);
+        //System.out.println(queryString);
         Query query = QueryFactory.create(queryString);
         String resultString;
         try (QueryExecution qe = QueryExecutionFactory.create(query, model)) {
@@ -385,18 +403,5 @@ public class Database_Control {
         }
         return resultString;
     }
-    
-    public String[] getAllArtists(){
-        
-        return null;
-    }
-    public String[] getAllAlbums(String ArtistName){
-        
-        return null;
-    }
-    public String[] getAllSongs(String albumName){
-        
-        return null;
-    }
-    
 }
+
