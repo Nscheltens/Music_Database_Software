@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.music_databases_control;
 
 //import java.util.Calendar;
@@ -33,19 +28,17 @@ public class Music_Database_Control{
         Input();
     } 
     public static void main(String[] args){
-        for(String arg: args){
-            OUT.println(arg);
-        }
+        OUT.println("Starting Database Control");
         Music_Database_Control d = new Music_Database_Control();
     }
     private void Control_Update(){
-        OUT.println("this Tread will wait and refresh the database");
+        //OUT.println("this Tread will wait and refresh the database");
         UPPER.Database_Updater();
     }
     private void Input(){
-        OUT.println("this Tread will wait for input of user actions");
+        //OUT.println("this Tread will wait for input of user actions");
         Scanner in = new Scanner(System.in);
-        OUT.print(">");
+        OUT.print(">>");
         while(in.hasNext()){
             String input = in.nextLine();
             //OUT.println(input);
@@ -55,7 +48,7 @@ public class Music_Database_Control{
                 return;
             }
             else if(des == -1) OUT.println("Incorrect usage type help to see commands");
-            OUT.print(">");
+            OUT.print(">>");
         }
     }
     
@@ -100,7 +93,6 @@ public class Music_Database_Control{
      * @return 
      */
     private int findQuary(String[] params){
-        OUT.println(params.length);
         if(params.length < 3) return -1;
         String name = params[2];
         if(params.length > 3){
@@ -108,7 +100,6 @@ public class Music_Database_Control{
                 name = name +"_"+params[i];
             }
         }
-        OUT.println("this is the name "+name);
         boolean stat;
         switch(params[1]){
             default: return -1;
@@ -141,6 +132,7 @@ public class Music_Database_Control{
     }
     private int updateDatabase(){
         SCAN.ScanForArtists(DefaultDirectory, true);
+        OUT.println("Database updated!");
         return 0;
     }
     
@@ -177,6 +169,7 @@ public class Music_Database_Control{
                 public void run() {
                     OUT.println("updating database");
                     SCAN.ScanForArtists(DefaultDirectory, true);
+                    OUT.print(">>");
                 }
             };
             // change timing to a more reasonable time to update database

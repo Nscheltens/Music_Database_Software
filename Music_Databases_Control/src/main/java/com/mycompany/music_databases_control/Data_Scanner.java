@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.music_databases_control;
 
 import java.io.File;
@@ -24,6 +19,7 @@ public class Data_Scanner {
     private final Scanner IN = new Scanner(System.in);
     
     public Data_Scanner(Database_Control d, String dir){
+        OUT.println("Starting Database Scanner");
         DefaultDirectory = dir;
         database = d;
     }
@@ -38,7 +34,7 @@ public class Data_Scanner {
             if(!auto) OUT.println("No correctly formatted files found.");
         }else{
             if(auto){
-                handleAutoFiles(cutList, "Song", 0);
+                handleAutoFiles(cutList, 0);
             }
             else{
                 handleFiles(cutList,"Song",0);
@@ -94,7 +90,7 @@ public class Data_Scanner {
             if(!auto) OUT.println("No correctly formatted files found.");
         }else{
             if(auto){
-                handleAutoFiles(cutList,"Album", 1);
+                handleAutoFiles(cutList, 1);
             }
             else{
                 handleFiles(cutList,"Album",1);
@@ -144,7 +140,7 @@ public class Data_Scanner {
             if(!auto) OUT.println("No correctly formatted files found.");
         }else{
             if(auto){
-                handleAutoFiles(cutList, "Artist", 2);
+                handleAutoFiles(cutList, 2);
             }
             else{
                 handleFiles(cutList,"Artist",2);
@@ -250,10 +246,8 @@ public class Data_Scanner {
             }
         }
     }
-    private void handleAutoFiles(String[][] items, String type, int level){
+    private void handleAutoFiles(String[][] items, int level){
         for(String [] item : items){
-            //OUT.println("adding ["+type+"] "+ item[0]);
-            //call database to add file
             AutocheckAdd(item,level);
             if(level == 0){
                 

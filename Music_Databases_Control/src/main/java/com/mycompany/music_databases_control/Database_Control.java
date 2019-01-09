@@ -1,25 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.music_databases_control;
 
 import java.io.*;
 
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
+import org.apache.jena.query.*;
 
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
@@ -33,6 +22,7 @@ import org.apache.jena.vocabulary.RDFS;
 
 public class Database_Control {
     
+    private static final java.io.PrintStream OUT = System.out;
     private final  Model model = setModel();
     private final String root = "http://somewhere/Music#";
     private Resource Artist, Album, Song;
@@ -42,9 +32,7 @@ public class Database_Control {
     private final Property NameP, PathP, DateP, RipP, FiletypeP, TrackNumP;
     
     public Database_Control(){
-        
-        System.out.println("Hello World!");
-        
+       
         Artist = model.getResource(root + "Artist");
         Album = model.getResource(root + "Album");
         Song = model.getResource(root + "Song");
@@ -58,54 +46,29 @@ public class Database_Control {
         RipP = model.createProperty(root + "Rip");
         FiletypeP = model.createProperty(root + "Filetype");
         TrackNumP = model.createProperty(root + "TrackNum");
-        
-        
-        // Create a new query
-        String quaryName = "TimP";
-        String queryString = "PREFIX root: <http://somewhere/Music#> "
-                + "select ?x ?p ?o where { ?x ?p ?o }";
- 
-        Query query = QueryFactory.create(queryString);
- 
-        // Execute the query and obtain results
-        QueryExecution qe = QueryExecutionFactory.create(query, model);
-        ResultSet results = qe.execSelect();
- 
-        // Output query results 
-        //System.out.println(checkArtist(quaryName));
-        ResultSetFormatter.out(System.out, results, query);
- 
-        // Important - free up resources used running the query
-        qe.close();
     }
     /**
      * 
      * @return 
      */
     public Model setModel(){
+        OUT.println("Starting Database\nSetting model");
         InputStream in = null;
         Model model = null;
         try {
-            // Create an empty in-memory model and populate it from the graph
             model = ModelFactory.createDefaultModel();
-            
             CharsetDecoder decoder = Charset.forName("windows-1252").newDecoder();
-            //CharsetEncoder encoder = Charset.forName("UTF8").newEncoder();
             in = new FileInputStream(new File("Database.ttl"));
             InputStreamReader inR = new InputStreamReader(in, decoder);
-            
-            model.read(inR, null, "TTL"); // null base URI, since model URIs are absolute
-            
+            model.read(inR, null, "TTL");
             in.close();
         } catch (FileNotFoundException ex) {
             System.err.println("No valid Database detectied, Creating new one");
             if (createDatabase(model)){
                 try {
-                    // Create an empty in-memory model and populate it from the graph
                     model = ModelFactory.createDefaultModel();
                     in = new FileInputStream(new File("Database.ttl"));
-            
-                    model.read(in, null, "TTL"); // null base URI, since model URIs are absolute
+                    model.read(in, null, "TTL");
                     in.close();
                 } catch(Exception e) {
                     System.err.println("error in setting model1");
@@ -153,8 +116,6 @@ public class Database_Control {
         Appears_on = model.createResource(prefixA + "AppearsOn").addProperty(RDF.type, OWL.ObjectProperty)
                 .addProperty(RDFS.domain, Song)
                 .addProperty(RDFS.range, Album);
-        
-        //Create data properties
         Name = model.createResource(prefixA + "Name").addProperty(RDF.type, OWL.DatatypeProperty);
         Path = model.createResource(prefixA + "Path").addProperty(RDF.type, OWL.DatatypeProperty);
         Date = model.createResource(prefixA + "Date").addProperty(RDF.type, OWL.DatatypeProperty);
@@ -172,13 +133,8 @@ public class Database_Control {
     }
     public boolean writeModel(){
         File file = new File("Database.ttl");
-        CharsetEncoder encoder = Charset.forName("UTF8").newEncoder();
-        //OutputStreamWriter writer = null;
         FileWriter writer = null;
         try {
-            //file.createNewFile();
-            FileOutputStream fileStream = new FileOutputStream(file);
-            //writer = new OutputStreamWriter(fileStream, encoder);
             writer = new FileWriter(file);
         } catch (IOException ex) {
             return false;
@@ -331,7 +287,17 @@ public class Database_Control {
     }
     
     /**
-     * 
+     * // Create a new query
+        String quaryName = "TimP";
+        String queryString = "PREFIX root: <http://somewhere/Music#> "
+                + "select ?x ?p ?o where { ?x ?p ?o }";
+        Query query = QueryFactory.create(queryString);
+        // Execute the query and obtain results
+        QueryExecution qe = QueryExecutionFactory.create(query, model);
+        ResultSet results = qe.execSelect();
+        ResultSetFormatter.out(System.out, results, query);
+        // Important - free up resources used running the query
+        qe.close();
      * @param artistName
      * @return 
      */
@@ -342,16 +308,14 @@ public class Database_Control {
                 + "root:"+artistName+" a root:Artist . "
                 + "root:"+artistName+" root:Name ?o . "
                 + "}";
-        //System.out.println(queryString);
-        Query query = QueryFactory.create(queryString);
         String resultString;
-        try(QueryExecution qe = QueryExecutionFactory.create(query, model)) {
+        try{
+            Query query = QueryFactory.create(queryString);
+            QueryExecution qe = QueryExecutionFactory.create(query, model);
             ResultSet results = qe.execSelect();
-            try{
-                resultString = results.next().getLiteral("o").getString();
-            }catch(Exception e){
-                resultString = null;
-            }
+            resultString = results.next().getLiteral("o").getString();
+        }catch(Exception e){
+            resultString = null;
         }
         return resultString;
     }
@@ -366,16 +330,14 @@ public class Database_Control {
                 + "root:"+albumName+" a root:Album . "
                 + "root:"+albumName+" root:Name ?o . "
                 + "}";
-        //System.out.println(queryString);
-        Query query = QueryFactory.create(queryString);
         String resultString;
-        try (QueryExecution qe = QueryExecutionFactory.create(query, model)) {
+        try{
+            Query query = QueryFactory.create(queryString);
+            QueryExecution qe = QueryExecutionFactory.create(query, model);
             ResultSet results = qe.execSelect();
-            try{
-                resultString = results.next().getLiteral("o").getString();
-            }catch(Exception e){
-                resultString = null;
-            }
+            resultString = results.next().getLiteral("o").getString();
+        }catch(Exception e){
+            resultString = null;
         }
         return resultString;
     }
@@ -390,16 +352,14 @@ public class Database_Control {
                 + "root:"+songName+" a root:Song . "
                 + "root:"+songName+" root:Name ?o . "
                 + "}";
-        //System.out.println(queryString);
-        Query query = QueryFactory.create(queryString);
         String resultString;
-        try (QueryExecution qe = QueryExecutionFactory.create(query, model)) {
+        try{
+            Query query = QueryFactory.create(queryString);
+            QueryExecution qe = QueryExecutionFactory.create(query, model);
             ResultSet results = qe.execSelect();
-            try{
-                resultString = results.next().getLiteral("o").getString();
-            }catch(Exception e){
-                resultString = null;
-            }
+            resultString = results.next().getLiteral("o").getString();
+        }catch(Exception e){
+            resultString = null;
         }
         return resultString;
     }
