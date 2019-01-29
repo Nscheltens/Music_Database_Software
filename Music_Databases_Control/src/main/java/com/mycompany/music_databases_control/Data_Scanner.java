@@ -45,7 +45,7 @@ public class Data_Scanner {
         int numSongs = list.length;
         int listMover = 0;
         String[][] cuttingList = new String[list.length][5];
-        Pattern p = Pattern.compile(".+\\.mp3");
+        Pattern p = Pattern.compile(".+[{\\.mp3}{\\.flac}]");
         for (String list1 : list) {
             //OUT.println(list1);
             Matcher m = p.matcher(list1);

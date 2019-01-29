@@ -23,16 +23,20 @@ import org.apache.jena.vocabulary.RDFS;
 public class Database_Control {
     
     private static final java.io.PrintStream OUT = System.out;
-    private final  Model model = setModel();
+    private final  Model model;
     private final String root = "http://somewhere/Music#";
+    private final String DatabaseDirectory;
     private Resource Artist, Album, Song;
     private Resource Released, Sings, Appears_on;
     private Resource Name, Path, Date, Rip, Filetype, TrackNum;
     private final Property ReleasedP, SingsP, Appears_onP;
     private final Property NameP, PathP, DateP, RipP, FiletypeP, TrackNumP;
     
-    public Database_Control(){
-       
+    public Database_Control(String data){
+        
+        DatabaseDirectory = data;
+        model = setModel();
+                
         Artist = model.getResource(root + "Artist");
         Album = model.getResource(root + "Album");
         Song = model.getResource(root + "Song");
@@ -51,14 +55,15 @@ public class Database_Control {
      * 
      * @return 
      */
-    public Model setModel(){
+    private Model setModel(){
         OUT.println("Starting Database\nSetting model");
         InputStream in = null;
         Model model = null;
         try {
             model = ModelFactory.createDefaultModel();
             CharsetDecoder decoder = Charset.forName("windows-1252").newDecoder();
-            in = new FileInputStream(new File("Database.ttl"));
+            File test = new File(DatabaseDirectory,"Database.ttl");
+            in = new FileInputStream(test);
             InputStreamReader inR = new InputStreamReader(in, decoder);
             model.read(inR, null, "TTL");
             in.close();
@@ -67,7 +72,7 @@ public class Database_Control {
             if (createDatabase(model)){
                 try {
                     model = ModelFactory.createDefaultModel();
-                    in = new FileInputStream(new File("Database.ttl"));
+                    in = new FileInputStream(new File(DatabaseDirectory,"Database.ttl"));
                     model.read(in, null, "TTL");
                     in.close();
                 } catch(Exception e) {
@@ -90,7 +95,7 @@ public class Database_Control {
      */
     public boolean createDatabase(Model model){
         System.out.println("Creating database in turtle format!");
-        File file = new File("Database.ttl");
+        File file = new File(DatabaseDirectory,"Database.ttl");
         FileWriter writer = null;
         try {
             file.createNewFile();
@@ -132,7 +137,7 @@ public class Database_Control {
         return true;
     }
     public boolean writeModel(){
-        File file = new File("Database.ttl");
+        File file = new File(DatabaseDirectory,"Database.ttl");
         FileWriter writer = null;
         try {
             writer = new FileWriter(file);

@@ -1,11 +1,18 @@
 package com.mycompany.music_databases_control;
 
 //import java.util.Calendar;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -13,22 +20,40 @@ import java.util.concurrent.TimeUnit;
  */
 public class Music_Database_Control{
     
-    // derive from JSON
+    // get from JSON
     public static final String OS = "Linux";
-    public final String DefaultDirectory = "D:\\TestCollection";
+    public String DefaultDirectory;
+    public String DatabaseDirectory;
     
     private static final java.io.PrintStream OUT = System.out;
-    private final Database_Control database = new Database_Control();
-    private final Data_Scanner SCAN = new Data_Scanner(database, DefaultDirectory);
+    private static Database_Control database;
+    private static Data_Scanner SCAN;
     private final Updater UPPER = new Updater();
     
     public Music_Database_Control() {
         //(new Music_Database_Control()).start();
+        try{
+            Object obj = new JSONParser().parse(new FileReader("Info.JSON"));
+            JSONObject jo = (JSONObject) obj;
+            
+            DefaultDirectory = (String) jo.get("Default_Directory");
+            DatabaseDirectory = (String) jo.get("Database_Directory");
+            
+        }catch(FileNotFoundException e){
+            
+        }catch(IOException e){
+            
+        }catch(ParseException e){
+            
+        }
+        database = new Database_Control(DatabaseDirectory);
+        SCAN = new Data_Scanner(database, DefaultDirectory);
         Control_Update();
         Input();
     } 
     public static void main(String[] args){
         OUT.println("Starting Database Control");
+        //OUT.println(System.getProperty("os.name"));
         Music_Database_Control d = new Music_Database_Control();
     }
     private void Control_Update(){
