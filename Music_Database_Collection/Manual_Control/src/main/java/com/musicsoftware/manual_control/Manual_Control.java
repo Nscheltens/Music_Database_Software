@@ -16,6 +16,8 @@ import org.json.simple.parser.ParseException;
 
 import com.musicsoftware.database_control.Database_Control;
 import com.musicsoftware.database_scanner.Database_Scanner;
+import java.io.FileWriter;
+import java.io.StringWriter;
 
 /**
  *
@@ -31,9 +33,9 @@ public class Manual_Control{
     private static final java.io.PrintStream OUT = System.out;
     private static Database_Control database;
     private static Database_Scanner SCAN;
-    private final Updater UPPER = new Updater();
+    //private final Updater UPPER = new Updater();
     
-    public Manual_Control() {
+    public Manual_Control(String[] args) {
         //(new Music_Database_Control()).start();
         try{
             Object obj = new JSONParser().parse(new FileReader("Info.JSON"));
@@ -43,7 +45,23 @@ public class Manual_Control{
             DatabaseDirectory = (String) jo.get("Database_Directory");
             
         }catch(FileNotFoundException e){
+            OUT.println("No JSON found, createing new one.");
+            if(createJSON()){
+                OUT.println("JSON successfully created");
+                try{
+                Object obj = new JSONParser().parse(new FileReader("Info.JSON"));
+                JSONObject jo = (JSONObject) obj;
             
+                DefaultDirectory = (String) jo.get("Default_Directory");
+                DatabaseDirectory = (String) jo.get("Database_Directory");
+                }catch(Exception ex){
+                    
+                }
+                
+            }else{
+                OUT.println("Unable to create JSON,exiting");
+                return;
+            }
         }catch(IOException e){
             
         }catch(ParseException e){
@@ -51,19 +69,39 @@ public class Manual_Control{
         }
         database = new Database_Control(DatabaseDirectory);
         SCAN = new Database_Scanner(database, DefaultDirectory);
-        Control_Update();
-        Input();
+        Input(args);
     } 
     public static void main(String[] args){
         OUT.println("Starting Database Control");
         //OUT.println(System.getProperty("os.name"));
-        Manual_Control d = new Manual_Control();
+        Manual_Control d = new Manual_Control(args);
     }
-    private void Control_Update(){
-        //OUT.println("this Tread will wait and refresh the database");
-        UPPER.Database_Updater();
+    private boolean createJSON(){
+        JSONObject obj = new JSONObject();
+
+        obj.put("Default_Directory",requestInfo("Music"));
+        obj.put("Database_Directory",requestInfo("Database"));
+
+        try(FileWriter file = new FileWriter("Info.JSON")){
+            file.write(obj.toJSONString());
+        }catch(Exception ex){
+            OUT.println("File creation failed exiting");
+            System.err.println(ex.getStackTrace());
+            return false;
+        }
+        return true;
     }
-    private void Input(){
+    private String requestInfo(String info){
+        Scanner in = new Scanner(System.in);
+        String ans = null;
+        OUT.println("Set Default "+info+" Directory");
+        while(in.hasNext()){
+            ans = in.nextLine();
+        }
+        return ans;
+    }
+    
+    private void Input(String[] args){
         //OUT.println("this Tread will wait for input of user actions");
         Scanner in = new Scanner(System.in);
         OUT.print(">>");
@@ -79,17 +117,13 @@ public class Manual_Control{
             OUT.print(">>");
         }
     }
-    
-    private void luanchTranscoder(){      
-    }
-    
     /**
      * 
      * @return 
      */
     private int exitProgram(){
         OUT.println("shuting down scheduler");
-        UPPER.Updater_Shutdown();
+        //UPPER.Updater_Shutdown();
         return 1;
     }
     private int displayHelp(){
@@ -182,36 +216,6 @@ public class Manual_Control{
                 return ReturnInt;
             case "exit": ReturnInt = exitProgram();
                 return ReturnInt;
-        }
-    }
-    
-    /**
-     * 
-     */
-    //change update class to acutally update
-    private class Updater{
-        private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        
-        public void Database_Updater(){
-            final Runnable updater = new Runnable() {
-                public void run() {
-                    OUT.println("updating database");
-                    SCAN.ScanForArtists(DefaultDirectory, true);
-                    OUT.print(">>");
-                }
-            };
-            // change timing to a more reasonable time to update database
-            final ScheduledFuture<?> updateHandle = scheduler.scheduleAtFixedRate(updater, 10, 10, TimeUnit.HOURS);
-            //remove all below after Input method complete
-            /*
-            scheduler.schedule(new Runnable() {
-                public void run() { System.out.println(updateHandle.cancel(true)); }
-            }, 30, TimeUnit.SECONDS);
-            scheduler.schedule(new Runnable() { public void run() { scheduler.shutdown(); } }, 31, TimeUnit.SECONDS);
-            */
-        }
-        public void Updater_Shutdown(){
-            scheduler.shutdown();
         }
     }
 }
