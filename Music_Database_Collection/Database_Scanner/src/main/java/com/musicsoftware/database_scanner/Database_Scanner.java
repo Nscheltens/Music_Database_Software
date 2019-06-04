@@ -46,12 +46,15 @@ public class Database_Scanner {
         int numSongs = list.length;
         int listMover = 0;
         String[][] cuttingList = new String[list.length][5];
-        Pattern p = Pattern.compile(".+[{\\.mp3}{\\.flac}]");
+        Pattern mp = Pattern.compile(".+\\.mp3");
+        Pattern fp = Pattern.compile(".+\\.flac");
         for (String list1 : list) {
             //OUT.println(list1);
-            Matcher m = p.matcher(list1);
-            if (m.matches()) {
+            Matcher mm = mp.matcher(list1);
+            Matcher fm = fp.matcher(list1);
+            if (mm.matches() || fm.matches()) {
                 //System.out.println("going to cut number off "+list1);
+            
                 String[] NumRemoved = list1.split("[0-9]{2}+ ");
                 //System.out.println("going to cut extention off "+NumRemoved[1]);
                 
